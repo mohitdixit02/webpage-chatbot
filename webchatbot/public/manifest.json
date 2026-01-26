@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "WebPageChatbot",
+  "version": "1.0",
+  "description": "Chatbot for any webpage",
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": "favicon.ico"
+  },
+  "permissions": ["activeTab"]
+}

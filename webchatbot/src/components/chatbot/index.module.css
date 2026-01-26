@@ -1,0 +1,124 @@
+/* ChatBot Main Section */
+.chatbot_main{
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    justify-content: space-between;
+    gap: 5px;
+    width: calc(100% - 20px);
+    height: 99%;
+}
+
+/* Chatbot Heading Section */
+.chatbot_heading_section{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.chatbot_heading{
+    display: flex;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 22px;
+}
+.chatbot_heading span{
+    color: rgb(206, 99, 11);
+}
+.chatbot_heading_options{
+    padding: 8px 0px;
+    display: flex;
+    gap: 10px;
+    align-items: space-between;
+    width: fit-content;
+}
+
+.model_explore_checkbox{
+    width: 50px;
+}
+
+.model_behaviour_select{
+    width: 150px;
+}
+
+.menu_item_header{
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.menu_item_description{
+    font-weight: 100;
+    font-size: 11px;
+}
+
+/* Message Section */
+.chatbot_messages_section{
+    position: relative;
+    height: 77%;
+    background-color: rgb(41, 39, 38);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.chatbot_messages_section_wrapper{
+    top: 0;
+    position: absolute;
+    width: calc(100% - 30px);
+    height:calc(100% - 80px);
+    padding: 30px 20px 70px 8px;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.chatbot_messages_section_wrapper::-webkit-scrollbar {
+    background-color: transparent;
+    width: 4px;
+}
+.chatbot_messages_section_wrapper::-webkit-scrollbar-thumb {
+    background-color: rgb(92, 112, 131);
+}
+
+.chatbot_message_container{
+    display: flex;
+    max-width: 100%;
+    gap: 10px;
+}
+
+.chatbot_message{
+    width: fit-content;
+    padding: 10px 13px;
+    font-weight: 500;
+    border-radius: 6px;
+}
+
+.bot_message{
+    display: flex;
+    flex-direction: row;
+}
+
+.user_message{
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.bot_message .chatbot_message{
+    background-color: rgb(47, 100, 143);
+    max-width: 70%;
+}
+
+.user_message .chatbot_message{
+    background-color: rgb(206, 99, 11);
+    max-width: 70%;
+}
+
+/* Input Section */
+.message_input_field_holder{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.message_input_field{
+    width: 95%;
+}

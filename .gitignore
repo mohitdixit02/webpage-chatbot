@@ -1,0 +1,10 @@
+# ----------- Server ----------
+*__pycache__/
+/server/db
+/server/*.ipynb
+.env
+
+# ----------- UI ----------
+webchatbot/node_modules/
+webchatbot/build/
+webchatbot/package-lock.json
