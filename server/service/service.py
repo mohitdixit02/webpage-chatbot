@@ -1,7 +1,7 @@
 from rag.webloader import WebPageContentLoader
 from rag.chroma import ChromaDatabase
 from rag.model import GenerateModel
-from pprint import pprint
+from config import logger
 
 class Service:
     def __init__(self):
@@ -12,7 +12,7 @@ class Service:
     def load_web_page_data(self, url: str):
         doc_exist = self.db.check_web_page(url)
         if doc_exist:
-            print("Web page already in the db")
+            logger.info("Web page already in the db")
             return {
                 "status": True,
                 "message": "Web page data already exists in the database."
@@ -45,7 +45,7 @@ class Service:
                     "data": "Failed to classify query type."
                 }
         if query_type == "casual":
-            print("Casual conversation mode")
+            logger.info("Casual conversation mode")
             res = self.gen_model.generate(
                 context={
                     "query": queryObj.query
@@ -66,8 +66,8 @@ class Service:
                 relevance_score_threshold=0.6
             )
             InPageSearchFail = (len(query_docs) == 0)
-            print(f"External Search Enabled: {queryObj.externalSearch}")
-            print(f"In-Page Search Failed: {InPageSearchFail}")
+            logger.info(f"External Search Enabled: {queryObj.externalSearch}")
+            logger.info(f"In-Page Search Failed: {InPageSearchFail}")
             wiki_docs = []
             if queryObj.externalSearch or InPageSearchFail:       
                 wiki_keywords = self.gen_model.get_wiki_keywords(queryObj.query)     
@@ -85,7 +85,7 @@ class Service:
             for doc in wiki_docs:
                 context_docs.append(doc.page_content)
             
-            print(f"Context Documents Total Length: {len(context_docs)}")
+            logger.info(f"Context Documents Total Length: {len(context_docs)}")
             res = self.gen_model.generate(
                 context={
                     "query": queryObj.query,

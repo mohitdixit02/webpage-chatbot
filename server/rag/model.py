@@ -3,10 +3,10 @@ from langchain_core.output_parsers import StrOutputParser, PydanticOutputParser
 from rag.template import TemplateProvider
 from pydantic import BaseModel, Field
 from typing import TypedDict, Annotated, Literal, Optional, Dict, Any
-from pprint import pprint
 import numpy as np
 from numpy import dot
 from numpy.linalg import norm
+from config import logger
 
 class QueryTypeStructModel(BaseModel):
     type: Annotated[Literal["casual", "query"], Field(description="Type of the user query")]
@@ -22,6 +22,7 @@ class WikiKeywordResponseModel(BaseModel):
     
 class EmbedModel:
     def __init__(self):
+        logger.info("Initializing embedding model...")
         self.model = HuggingFaceEmbeddings(
             model_name="sentence-transformers/all-MiniLM-L6-v2"
         )
@@ -38,6 +39,7 @@ class EmbedModel:
 
 class GenerateModel:
     def __init__(self):
+        logger.info("Initializing generation model...")
         self.model = ChatHuggingFace(llm=HuggingFaceEndpoint(
             repo_id="meta-llama/Llama-3.1-8B-Instruct",
             task="conversational",
@@ -51,7 +53,7 @@ class GenerateModel:
         return self.model
     
     def get_query_type(self, query: str):
-        print("Classifying query type...")
+        logger.info("Classifying query type...")
         try:
             query_parser = PydanticOutputParser(pydantic_object=QueryTypeStructModel)
             template = self.template_provider.get_query_type_template(instructions=query_parser.get_format_instructions())
@@ -65,11 +67,11 @@ class GenerateModel:
             )
             return res.type
         except Exception as e:
-            print("Error in query type classification:", e)
+            logger.error("Error in query type classification: %s", e)
             return None
         
     def get_wiki_keywords(self, query: str):
-        print("Extracting Wikipedia keywords...")
+        logger.info("Extracting Wikipedia keywords...")
         try:
             wiki_parser = PydanticOutputParser(pydantic_object=WikiKeywordResponseModel)
             wiki_template = self.template_provider.get_wiki_keywords_template(
@@ -83,19 +85,20 @@ class GenerateModel:
                     "configurable": {"max_new_tokens": 100}
                 }
             )
-            print("Extracted Keywords:", res)
+            logger.info("Wikipedia keywords extracted successfully.")
+            logger.info("Extracted Keywords: %s", res)
             return res.keywords
         except Exception as e:
-            print("Error in Wikipedia keyword extraction:", e)
+            logger.error("Error in Wikipedia keyword extraction: %s", e)
             return []
         
     def generate(self, context: object, behaviour: str="Explain", mode: str="casual"):
-        print("Generating response...")
+        logger.info("Generating response...")
         if mode == "casual":
             try:
                 prompt = context.get("query")
-                print("Active Mode: Casual Conversation")
-                print("Casual mode prompt:", prompt)
+                logger.info("Active Mode: Casual Conversation")
+                logger.info("Casual mode prompt: %s", prompt)
                 casual_parser = PydanticOutputParser(pydantic_object=CasualResponseStructModel)
                 gen_template = self.template_provider.get_casual_template(instructions=casual_parser.get_format_instructions())
                 gen_chain = gen_template | self.model | casual_parser
@@ -107,7 +110,7 @@ class GenerateModel:
                 )
                 return gen_res.response
             except Exception as e:
-                print("Error in casual response generation:", e)
+                logger.error("Error in casual response generation: %s", e)
                 return None
         else:
             try:
@@ -115,10 +118,10 @@ class GenerateModel:
                 context_docs = context.get("context_docs", [])
                 externalSearchFail = context.get("externalSearchFail", False)
                 InPageSearchFail = context.get("InPageSearchFail", False)
-                print("Active Mode: Query Response")
-                print("External Search Failed:", externalSearchFail)
-                print("In-Page Search Failed:", InPageSearchFail)
-                print("Model behaviour:", behaviour)
+                logger.info("Active Mode: Query Response")
+                logger.info("External Search Failed: %s", externalSearchFail)
+                logger.info("In-Page Search Failed: %s", InPageSearchFail)
+                logger.info("Model behaviour: %s", behaviour)
                 gen_parser = PydanticOutputParser(pydantic_object=QueryResponseStructModel)
                 gen_template = self.template_provider.get_generation_template(
                     instructions=gen_parser.get_format_instructions(),
@@ -141,6 +144,6 @@ class GenerateModel:
                 )
                 return gen_res.answer
             except Exception as e:
-                print("Error in query response generation:", e)
+                logger.error("Error in query response generation: %s", e)
                 return None
             
