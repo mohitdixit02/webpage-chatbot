@@ -1,5 +1,5 @@
 import React from 'react'
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
