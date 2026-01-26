@@ -36,13 +36,6 @@ class Service:
                         "status": False,
                         "message": "Failed to add web page data to the database."
                     }
-
-            # docs = self.db.load_db_content()
-            # pprint(docs)
-            # return {
-            #     "status": False,
-            #     "message": "Testing going on..."
-            # }
             
     def handle_user_query(self, queryObj):
         query_type = self.gen_model.get_query_type(queryObj.query)

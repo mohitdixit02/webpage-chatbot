@@ -3,6 +3,7 @@ from langchain_classic.schema import Document
 from langchain_classic.text_splitter import RecursiveCharacterTextSplitter
 from rag.model import EmbedModel
 import re
+import time
 
 class ChromaDatabase:
     def __init__(self):
@@ -29,7 +30,39 @@ class ChromaDatabase:
         res = self.db.get()
         return res
     
-    def add_docs(self, scripts, auto_compress=True, compress_count=20):
+    def compress_data(self, max_allow_length):
+        print(f"Minimum Required Length: {max_allow_length}")
+        curr_docs = self.db.get()
+        source_timestamps = {}
+        for idx, meta_data in enumerate(curr_docs['metadatas']):
+            source = meta_data.get('source')
+            timestamp = meta_data.get('time_stamp')
+            if source and source not in source_timestamps:
+                source_timestamps[source] = timestamp
+        print(f"Unique sources in DB with timestamps: {len(source_timestamps)}")
+        print(source_timestamps)
+ 
+        if len(source_timestamps) >= max_allow_length:
+            source_timestamps = sorted(source_timestamps.items(), key=lambda x: x[1])
+            oldest_sources = [source for source, ts in source_timestamps[:len(source_timestamps) - max_allow_length + 1]]
+            print(f"Oldest sources to delete: {oldest_sources}")
+            print("Preparing to delete documents from oldest sources...")
+            for source in oldest_sources:
+                print(f"Deleting documents for source: {source}")
+                self.db.delete(
+                    where={"source": source}
+                )
+                print(f"Deleted documents from source: {source}")
+            print("Compression completed.")
+        else:
+            print("No compression needed. Docs less than Max Allowed Length.")
+                    
+        
+    def add_docs(self, scripts, auto_compress=True, max_allow_length=5):   
+        if auto_compress:
+            print("Auto Compress Enabled. Checking for compression...")
+            self.compress_data(max_allow_length)
+        
         docs_list = []
         print("Adding documents to Chroma DB...")
         print(f"Total scripts to add: {len(scripts)}")
@@ -40,6 +73,7 @@ class ChromaDatabase:
                 chunk_metadata = doc_metadata.copy()
                 chunk_metadata.update({
                     "chunk_index": j,
+                    "time_stamp": int(time.time()),
                 })
                 print(f"Adding chunk {j + 1}/{len(docs_chunks)} for document with metadata: {doc_metadata}")
                 docs_list.append(
