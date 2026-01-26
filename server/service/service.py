@@ -39,11 +39,10 @@ class Service:
             
     def handle_user_query(self, queryObj):
         query_type = self.gen_model.get_query_type(queryObj.query)
-        # query_type = 'query'
         if query_type is None:
             return {
                     "status": False,
-                    "message": "Failed to classify query type."
+                    "data": "Failed to classify query type."
                 }
         if query_type == "casual":
             print("Casual conversation mode")

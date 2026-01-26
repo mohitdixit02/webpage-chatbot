@@ -3,8 +3,7 @@ import os
 from fastapi import FastAPI
 from controller.main import router
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
-from ReqModel.main import ErrorResponse
+from reqModel.main import APIResponse, ErrorResponse
 
 app = FastAPI()
 app.include_router(router)
@@ -30,6 +29,9 @@ async def verify_extension_id(request, call_next):
     received_id = request.headers.get("X-EXTENSION-AUTH-ID")
     if received_id != expected_id:
         print("Invalid AUTH ID received:", received_id)
-        return JSONResponse(content=ErrorResponse(res_message="Invalid AUTH ID.").dict(), status_code=401)
+        return APIResponse(
+            res_instance=ErrorResponse(res_message="Invalid AUTH ID."), 
+            status_code=401
+        )
     response = await call_next(request)
     return response
