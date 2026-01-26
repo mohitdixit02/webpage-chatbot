@@ -11,7 +11,7 @@ import ExploreOffOutlinedIcon from '@mui/icons-material/ExploreOffOutlined';
 import { styled } from '@mui/material/styles';
 import Tooltip, {tooltipClasses } from '@mui/material/Tooltip';
 
-export default function Heading() {
+export default function Heading({behaviour, setBehaviour, setIsExternalSearchEnabled, isExternalSearchEnabled}) {
         const behaviourOptions = [
             {
                 value: "Explain",
@@ -29,7 +29,6 @@ export default function Heading() {
                 description: "Quick One line answer to the query."
             }
         ];
-        const [behaviour, setBehaviour] = useState('Summary');
         const label = { slotProps: { input: { 'aria-label': 'External Search' } } };
         const HtmlTooltip = styled(({ className, ...props }) => (
         <Tooltip {...props} classes={{ popper: className }} />
@@ -61,15 +60,19 @@ export default function Heading() {
                     color='warning'
                     {...label}
                     icon={<ExploreOffOutlinedIcon 
-                        sx={{color: 'white',
-                            fontSize: '16px',
-                    }} />}
+                        sx={{
+                            color: 'white',
+                            fontSize: '22px',
+                        }} 
+                    />}
                     checkedIcon={<ExploreOutlinedIcon
                         sx={{
-                            fontSize: '16px'
+                            fontSize: '22px'
                         }}
                         />}
-                        />
+                    checked={isExternalSearchEnabled}
+                    onChange={(e) => setIsExternalSearchEnabled(e.target.checked)}
+                />
             </HtmlTooltip>
             <FormControl className={styles["model_behaviour_select"]}>
                 <InputLabel id="behaviour-select-label" color='warning' sx={{color:"white"}}>Model Behaviour</InputLabel>

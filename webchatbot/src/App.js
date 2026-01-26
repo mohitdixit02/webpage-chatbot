@@ -1,6 +1,6 @@
 import ChatBot from './components/chatbot/Main';
 
-const isProd = process.env.NODE_ENV === 'production';
+const isProd = process.env.REACT_APP_NODE_ENV === 'production';
 const appStyle = {
   width: isProd ? '500px' : '100vw',
   height: isProd ? '500px' : '100vh',

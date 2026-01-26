@@ -6,29 +6,63 @@ import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import PersonIcon from '@mui/icons-material/Person';
 import styles from "./index.module.css";
 import CircularProgress from '@mui/material/CircularProgress';
+import { send_query } from '../api';
 
-export default function MessageSection({messages, setMessages, newQuery, setNewQuery, loading, setLoading}) {
+export default function MessageSection({messages, addNewMessage, newQuery, setNewQuery, loading, setLoading, actvURL, behaviour, isExternalSearchEnabled}) {
   const messagesEndRef = useRef(null);
-  const addBotMessage = (botMessage) => {
-    setMessages(prevMessages => [
-      ...prevMessages,
-      {
-        'type': 'bot',
-        'message': botMessage
-      }
-    ]);
-  };
 
   useEffect(() => {
     if (!newQuery) return;
-    console.log("New Query Detected in MessageSection:", newQuery);
-    setLoading(true);
-    setTimeout(() => {
-      addBotMessage(`This is a placeholder response to your query: "${newQuery}".`);
-      setLoading(false);
-    }, 2000);
-    setNewQuery(null);
+    console.log("New Query Detected in MessageSection");
+    queryUser();
   }, [newQuery]);
+
+  const queryUser = async () => {
+      setLoading(true);
+      const res = await send_query({
+        "query": newQuery,
+        "url": actvURL,
+        "behaviour": behaviour,
+        "externalSearch": isExternalSearchEnabled
+      })
+      
+      if(res.res_status === 'success'){
+        addNewMessage('bot', res.res_message);
+      }
+      else{
+        addNewMessage('bot', 'Sorry, there was an error processing your request. Please try again later.');
+      }
+      setLoading(false);
+      setNewQuery(null);
+  }
+
+  const renderMessageContent = (content) => {
+    if (typeof content === "string" || typeof content === "number" || typeof content === "boolean") {
+      return <p>{content}</p>;
+    }
+    if (Array.isArray(content)) {
+      return (
+        <ul style={{ marginLeft: 16 }}>
+          {content.map((item, idx) => (
+            <li key={idx}>{renderMessageContent(item)}</li>
+          ))}
+        </ul>
+      );
+    }
+    if (typeof content === "object" && content !== null) {
+      return (
+        <div style={{ marginLeft: 8 }}>
+          {Object.entries(content).map(([key, value], idx) => (
+            <div key={key + idx} style={{ marginBottom: 5 }}>
+              <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong>
+              {renderMessageContent(value)}
+            </div>
+          ))}
+        </div>
+      );
+  }
+  return null;
+}
 
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -46,7 +80,10 @@ export default function MessageSection({messages, setMessages, newQuery, setNewQ
             <Box
               className={`${styles['chatbot_message']}`}
             >
-              {msg.message}
+              {msg.type === 'bot' && typeof msg.message === 'object' ?
+               renderMessageContent(msg.message) : (
+                msg.message
+              )}
             </Box>
           </Box>
         ))}

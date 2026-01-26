@@ -7,19 +7,13 @@ import styles from "./index.module.css";
 import IconButton from '@mui/material/IconButton';
 import CircularProgress from '@mui/material/CircularProgress';
 
-export default function BotInput({messages, setMessages, setNewQuery, loading}) {
+export default function BotInput({messages, addNewMessage, setNewQuery, loading, actvURL}) {
     const [userInput, setUserInput] = useState("");
     const addUserMessage = (e) => {
         console.log(e);
         if(e.type === 'keydown' && e.key !== 'Enter') return;
         if (userInput.trim() === "") return;
-        setMessages(prevMessages => [
-        ...prevMessages,
-        {
-            'type': 'user',
-            'message': userInput
-        }
-        ]);
+        addNewMessage('user', userInput);
         setNewQuery(userInput);
         setUserInput("");
     }
@@ -33,6 +27,7 @@ export default function BotInput({messages, setMessages, setNewQuery, loading}) 
                 label="Ask your Question" 
                 variant="filled"
                 color='warning'
+                disabled={(actvURL === null || loading)}
                 slotProps={{
                     inputLabel: {
                         style: { color: 'rgb(168, 168, 168)',
@@ -57,7 +52,7 @@ export default function BotInput({messages, setMessages, setNewQuery, loading}) 
                         <CircularProgress size={18} color='warning' />
                     </div>
                 ) : (
-                    <SendIcon color='warning' sx={{ fontSize: '18px', padding: '10px' }} />
+                    <SendIcon disabled={(actvURL === null)} color='warning' sx={{ fontSize: '18px', padding: '10px' }} />
                 )}
             </IconButton>
         </div>
