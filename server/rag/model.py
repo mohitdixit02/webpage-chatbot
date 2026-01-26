@@ -2,7 +2,7 @@ from langchain_huggingface import HuggingFacePipeline, HuggingFaceEmbeddings, Hu
 from langchain_core.output_parsers import StrOutputParser, PydanticOutputParser
 from rag.template import TemplateProvider
 from pydantic import BaseModel, Field
-from typing import TypedDict, Annotated, Literal, Optional
+from typing import TypedDict, Annotated, Literal, Optional, Dict, Any
 from pprint import pprint
 import numpy as np
 from numpy import dot
@@ -15,10 +15,10 @@ class CasualResponseStructModel(BaseModel):
     response: Annotated[str, Field(description="Response to the casual user query")]
     
 class QueryResponseStructModel(BaseModel):
-    answer: Annotated[str, Field(description="Answer to the user query based on the provided context")]
+    answer: Annotated[Dict[str, Any],  Field(description="Answer to the user query based on the provided context in form of key-value pairs")]
     
 class WikiKeywordResponseModel(BaseModel):
-    keywords: Annotated[str, Field(description="Comma separated keywords extracted from the user query for Wikipedia search")]
+    keywords: Annotated[list, Field(description="List of relevant keywords extracted from the user query")]
     
 class EmbedModel:
     def __init__(self):
@@ -135,7 +135,7 @@ class GenerateModel:
                     },
                     config={
                         "configurable": {
-                            "max_new_tokens": (500 if behaviour=="One-Line" else 2000)
+                            "max_new_tokens": (800 if behaviour=="One-Line" else 3000)
                         }
                     }
                 )

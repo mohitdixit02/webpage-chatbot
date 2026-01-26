@@ -81,7 +81,7 @@ class Service:
                 wiki_keywords = self.gen_model.get_wiki_keywords(queryObj.query)     
                 wiki_docs = self.wb_loader.load_wikipedia_data(
                     wiki_keywords,
-                    top_k=5,
+                    top_k=2,
                     acceptable_relevance_score=0.4,
                     relevance_score_threshold=0.75
                 )
@@ -104,6 +104,11 @@ class Service:
                 behaviour=queryObj.behaviour, 
                 mode="query"
             )
+            if res is None:
+                return {
+                    "status": False,
+                    "data": "Failed to generate response for the user query."
+                }
             return {
                 "status": True,
                 "data": res

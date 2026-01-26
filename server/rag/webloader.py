@@ -26,17 +26,29 @@ class WebPageContentLoader:
                 language="en",
                 top_k=top_k,
             )
-            docs = wiki_retrv.invoke(keywords)
+            
+            disimilar_keywords = []
+            for kw in keywords:
+                if all(self.embd_model.get_relevance_score(kw, existing_kw) < relevance_score_threshold for existing_kw in disimilar_keywords):
+                    disimilar_keywords.append(kw)
+            
+            print(f"Dissimilar Keywords selected for Wikipedia search: {disimilar_keywords}")
+            print("Acceptable Relevance Score:", acceptable_relevance_score)
+            docs = []
+            for keyword in disimilar_keywords:
+                print(f"Fetching articles for keyword: {keyword}")
+                doc_colln = wiki_retrv.invoke(keyword)
+                docs.extend(doc_colln)
+            
             print(f"Loaded {len(docs)} documents from Wikipedia for keywords.")
             print("Filtering Wiki documents based on relevance score threshold...")
 
             # Checking the relevance of every document with respect to 
             # the most relevant document fetched based on the keywords
-            print("Acceptable Relevance Score:", acceptable_relevance_score)
             doc_with_scores = []
             top_score = 0
             for doc in docs:
-                score = self.embd_model.get_relevance_score(keywords, doc.metadata.get("summary", ""))
+                score = self.embd_model.get_relevance_score((" ").join(disimilar_keywords), doc.page_content)
                 print(f"Wiki Document Title: {doc.metadata.get('title')}, Relevance Score: {score}")
                 top_score = max(top_score, score)
                 if(score >= acceptable_relevance_score):

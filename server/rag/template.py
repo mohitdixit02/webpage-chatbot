@@ -8,17 +8,17 @@ class TemplateProvider:
         )
         
         self.casual_talk = PromptTemplate(
-            template="You are a Chatbot who answer user queries based on the webpage on which the user is browsing. User has made a casual conversation. Reply to it in following format: {format_instructions} \n. User: {query}",
+            template="You are a Chatbot who answer user queries based on the webpage on which the user is browsing. User has made a casual conversation. Reply to it in following format: {format_instructions} \n. Return the answer as a JSON object where each key is a heading (topic or section name) and each value is a string containing the explanation or details for that heading. User: {query}",
             input_variables=["format_instructions", "query"],
         )
         
         self.generation_template = PromptTemplate(
-            template="You are a Chatbot who answer user queries based on the webpage on which the user is browsing. Use the following context to answer the query. If you don't know the answer, just say that you don't know, don't try to make up an answer. \n Context: {context_docs} \n User Query: {query} \n Reply in the following format: {format_instructions} {behaviour} {search_fail_info}",
+            template="You are a Chatbot who answer user queries based on the webpage on which the user is browsing. Use the following context to answer the query. If you don't know the answer, just say that you don't know, don't try to make up an answer. \n Context: {context_docs} \n User Query: {query} \n Reply in the following format: {format_instructions} Return the answer as a JSON object where each key is a heading (topic or section name) and each value is a string containing the explanation or details for that heading. {behaviour} {search_fail_info}",
             input_variables=["behaviour", "search_fail_info", "format_instructions", "context_docs", "query"],
         )
         
         self.wiki_keywords_template = PromptTemplate(
-            template="Act as Keywords Generator. Generate keywords from the user query that can be used to search Wikipedia for relevant articles. User Query: {query}. Follow these instructions: Return minimum 3 keywords as a comma-separated list. Do not return any code, explanation. \n {format_instructions} \n",
+            template="Act as Keywords Provider. Understand user query and provide a list of relevant keywords that can be used to search Wikipedia for relevant articles. User Query: {query}. Follow these instructions: Do not return any code, explanation. \n {format_instructions} \n",
             input_variables=["query", "format_instructions"],
         )
         
@@ -27,10 +27,10 @@ class TemplateProvider:
             input_variables=["format_instructions"],
         )
         
-        self.external_search_fail_apology = "Note: An external search was attempted but failed, so also apologies to the user for the inconvenience."
-        self.in_page_search_fail = "Also tell user that no relevant information find from the webpage they are browsing, the output is based on external knowledge."
-        self.behv_explain = "Explain the content in more details with subtopic explanations and reasoning. Minimum 800 words."
-        self.behv_summary = "Provide a concise summary of the content. Word Limit - 300 words."
+        self.external_search_fail_apology = "Note: An external search was attempted but failed, so also apologies to the user for the inconvenience. Make this a separate heading in the response."
+        self.in_page_search_fail = "Also tell user that no relevant information find from the webpage they are browsing, the output is based on external knowledge. Make this a separate heading in the response."
+        self.behv_explain = "Explain the content in more details with subtopic explanations and reasoning. Word Limit 800 words."
+        self.behv_summary = "Provide a concise summary of the content. Word Limit - 200 words."
         self.behv_oneline = "Provide a one-line reply of the content. Word Limit - 50 words."
         
     def get_query_type_template(self, instructions: str):
