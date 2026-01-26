@@ -9,7 +9,7 @@ class WebPageContentLoader:
         self.embd_model = EmbedModel()
         pass
     
-    def load_page_data(self, url):
+    def load_page_data(self, url : str):
         try:
             logger.info(f"Loading data from {url}...")
             docs = WebBaseLoader(url).load()
@@ -19,7 +19,7 @@ class WebPageContentLoader:
             logger.error(f"Error loading data from {url}:", e)
             return None
         
-    def load_wikipedia_data(self, keywords, top_k=3, acceptable_relevance_score: float=0.5, relevance_score_threshold : float=0.5):
+    def load_wikipedia_data(self, keywords : list, top_k : int=3, acceptable_relevance_score: float=0.5, relevance_score_threshold : float=0.5):
         try:
             logger.info(f"Loading Wikipedia data for keywords...")
             wiki_retrv = WikipediaRetriever(

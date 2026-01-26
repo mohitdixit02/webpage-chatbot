@@ -22,7 +22,7 @@ class ChromaDatabase:
             keep_separator=False
         )
     
-    def preprocess_text(self, text):
+    def preprocess_text(self, text : str):
         logger.info("Preprocessing text for splitting...")
         text_remv_ws = re.sub(r'\s+', ' ', text).strip()
         splt_txt = self.txtsplitter.split_text(text_remv_ws)
@@ -32,7 +32,7 @@ class ChromaDatabase:
         res = self.db.get()
         return res
     
-    def compress_data(self, max_allow_length):
+    def compress_data(self, max_allow_length : int):
         logger.info("Minimum Required Length: %d", max_allow_length)
         curr_docs = self.db.get()
         source_timestamps = {}
@@ -60,7 +60,7 @@ class ChromaDatabase:
             logger.info("No compression needed. Docs less than Max Allowed Length.")
                     
         
-    def add_docs(self, scripts, auto_compress=True, max_allow_length=5):   
+    def add_docs(self, scripts : object, auto_compress : bool=True, max_allow_length : int=5):   
         if auto_compress:
             logger.info("Auto Compress Enabled. Checking for compression...")
             self.compress_data(max_allow_length)

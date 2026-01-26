@@ -2,6 +2,7 @@ from rag.webloader import WebPageContentLoader
 from rag.chroma import ChromaDatabase
 from rag.model import GenerateModel
 from config import logger
+from reqModel.main import UserQueryRequest
 
 class Service:
     def __init__(self):
@@ -37,7 +38,7 @@ class Service:
                         "message": "Failed to add web page data to the database."
                     }
             
-    def handle_user_query(self, queryObj):
+    def handle_user_query(self, queryObj : UserQueryRequest):
         query_type = self.gen_model.get_query_type(queryObj.query)
         if query_type is None:
             return {
