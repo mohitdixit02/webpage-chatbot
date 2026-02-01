@@ -1,7 +1,16 @@
 # WebPage Chatbot
 A Chrome extension chatbot that answers user queries based on the content of the currently open webpage. The project features a chatbot UI as a Chrome extension, integrated with a Retrieval-Augmented Generation (RAG) backend built using FastAPI. It uses Hugging Face models and Wikipedia retrieval to provide contextual responses.
 
-### Key Features
+### Table of Contents
+- [Key Features](#key-features)
+- [Installation](#installation)
+- [Project Architecture](#project-architecture)
+- [Challenges and Optimizations](#challenges-and-optimizations)
+- [Modules and Libraries Used](#modules-and-libraries-used)
+- [Settings and Configurations](#settings-and-configurations)
+- [References](#references)
+
+## Key Features
 - `Contextual Responses:` Provides answers based on the content of the webpage you are viewing.
 - `External Search:` When enabled by the user, Backend uses Wikipedia to fetch additional information based on the user query before responding.
 - `Automatic Fallback:` If webpage content is insufficient, the chatbot automatically performs external searches even if it is not enabled.
@@ -13,8 +22,8 @@ A Chrome extension chatbot that answers user queries based on the content of the
 ## Installation
 ### Prerequisites
 Make sure you have following installed in your system:
-1. Node.js (21.7 used in this project)
-2. Conda (25.9 used in this project) (Recommended) or Python 3.11+
+1. Node.js (21.7)
+2. Conda (25.9) (Recommended) or Python 3.11+
 3. Hugging Face API Key (You can create one by signing up at Hugging face website)
 
 ### Setup
@@ -44,9 +53,9 @@ Make sure you have following installed in your system:
         - For `FRONTEND_URL`, you can use the default one in `env.example`.
         - For `BACKEND_EXTENSION_AUTH_ID`, you can generate a random value on your own. Make sure its the same in both frontend and backend env files.
         - For `HF_CACHE_DIR`, provide a valid path in your system where you want to store the Hugging Face models cache. Currently, Embedding Model run locally based on the `transformers` module.
-        - For `Settings` related env variables, you can use the default values provided in `env.example` or modify them as per your requirements. For more details related to terms, you can check the `Settings and Configurations` section.
+        - For `Settings` related env variables, you can use the default values provided in `env.example` or modify them as per your requirements. For more details related to terms, you can check the <a href="#settings-and-configurations">Settings and Configurations</a> section.
 
-    - Make sure you are in the activated environment and run the backend server:
+    - Make sure you are in the activated environment, then run the backend server:
         ```bash
         uvicorn app:app --host 127.0.0.1 --port 8000
         ``` 
@@ -92,11 +101,11 @@ Provides prompt templates based on different requirements like:
 ### Loaders
 - `Webbase Loader:` Extracts the content from the currently open webpage. It uses `BeautifulSoup` for HTML parsing.
 - `Wikipedia Retriever:` Fetches relevant articles from Wikipedia based on user queries when external search is enabled or fallback is triggered.
-- `Context based Filtering:` Filters out irrelevant information before sending the final context doc to LLM. For detail explanation check: Challenges and Optimizations section.
+- `Context based Filtering:` Filters out irrelevant information before sending the final context doc to LLM. For detail explanation check: <a href="#challenges-and-optimizations">Challenges and Optimizations</a> section.
 
 ### Database:
 - `Chroma DB` is used to store the embeddings of the webpage content.
-- `Context based Filtering:` Filters out irrelevant information before sending the final context doc to LLM. For detail explanation check: Challenges and Optimizations section.
+- `Context based Filtering:` Filters out irrelevant information before sending the final context doc to LLM. For detail explanation check: <a href="#challenges-and-optimizations">Challenges and Optimizations</a> section.
 
 ### Models:
 - `Embedding Model:` 
@@ -113,10 +122,10 @@ Provides prompt templates based on different requirements like:
         - Final Text Generation based on context documents.
 
 ### API Endpoints:
-- Loading Scripts:
+- `Loading Scripts:`
     - Check whether the requested webpage is already in database or not.
     - If not, it loads the webpage content, preprocesses it and stores the embeddings in Chroma DB.
-- Query:
+- `Query:`
     - Handles user queries from the Chrome extension.
     - If user question is casual, it directly generates response using LLM.
     - If user question is query specific, it retrieves relevant documents from Chroma DB. If no relevant documents found based on query, fallback is triggered.
@@ -128,9 +137,9 @@ Provides prompt templates based on different requirements like:
     - Users can select how they want the model to respond: Explain, Summarize or One-liner.
     - The prompt templates are adjusted accordingly to guide the LLM.
     - Behaviours are:
-        - Explain: Provides detailed explanations.
-        - Summarize: Gives concise summaries.
-        - One-liner: Responds with one-line answer.
+        - `Explain:` Provides detailed explanations.
+        - `Summarize:` Gives concise summaries.
+        - `One-liner:` Responds with one-line answer.
 
 - External Search:
     - Users can enable or disable external search via a toggle in the chatbot UI.
@@ -144,7 +153,7 @@ Provides prompt templates based on different requirements like:
 
 - Auto Compression of Webpages in Database:
     - To manage database size and to prevent multiple requests for same webpage, an auto-compression mechanism is implemented.
-    - At a given time, only the latest k webpages are stored in the database, which is configurable as an environment variable.
+    - At a given time, only a specific count of latest webpages are stored in the database, which is configurable as an environment variable.
     - This keeps database size in control, while still preventing multiple requests for same webpage within a short duration.
 
 ## Challenges and Optimizations
@@ -196,7 +205,7 @@ Provides prompt templates based on different requirements like:
 6. BeautifulSoup4
 7. Wikipedia-API
 
-### Models used
+### Models:
 1. Embedding Model: `sentence-transformers/all-MiniLM-L6-v2` 
 2. LLM Model: `meta-llama/Llama-3.1-8B-Instruct`
 
