@@ -4,11 +4,18 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
-
 logger.info("Logger configured successfully.")
 logger.info("Starting configuration setup...")
+
+# Load environment variables
+logger.info("Loading environment variables...")
 import os
-cache_dir = 'D:/Development/ML/Deep Learning/GenAI/.hf_cache'
+from dotenv import load_dotenv
+load_dotenv()
+
+# Cache Directories Setup
+logger.info("Setting up cache directories...")
+cache_dir = os.getenv("HF_CACHE_DIR", "./hf_cache")
 os.environ['HF_HOME'] = cache_dir
 os.environ['TRANSFORMERS_CACHE'] = cache_dir
 os.environ['HF_DATASETS_CACHE'] = cache_dir
@@ -18,12 +25,9 @@ os.makedirs(cache_dir, exist_ok=True)
 # HF login
 logger.info("Logging into Hugging Face...")
 from huggingface_hub import login
-from dotenv import load_dotenv
-load_dotenv()
 login(os.getenv("HF_TOKEN"))
 
 import transformers
 logger.info("Default cache directory: %s", transformers.file_utils.default_cache_path)
 logger.info("Custom cache directory set to: %s", cache_dir)
 logger.info("Configuration setup completed.")
-    
