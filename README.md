@@ -183,10 +183,40 @@ Provides prompt templates based on different requirements like:
 - Solution: To enhance the user experience, external search fallback is implemented. If no document from database get selected after context based filtering, external search is automatically performed even if it is disabled by user. This ensures that chatbot can answer such queries.
 
 ## Modules and Libraries Used
+### Frontend:
+1. React.js
+2. Material-UI
+
+### Backend:
+1. FastAPI
+2. Langchain
+3. Chroma DB
+4. Hugging Face Models and Transformers
+5. Python Logging
+6. BeautifulSoup4
+7. Wikipedia-API
+
+### Models used
+1. Embedding Model: `sentence-transformers/all-MiniLM-L6-v2` 
+2. LLM Model: `meta-llama/Llama-3.1-8B-Instruct`
 
 ## Settings and Configurations
+The following environment variables can be configured in the backend `.env` file to customize the chatbot behavior:
+- `TOP_K_DOCS_IN_DB:` Number of top documents to fetch from database before applying context based filtering. Default is 5.
+- `TOP_K_DOCS_IN_RETRIEVER:` Number of top documents to fetch from Wikipedia retriver before applying context based filtering. Default is 2.
+- `ACCEPTABLE_RELEVANCE_SCORE_DB:` Minimum similarity score with user query for a document to be considered from database. Default is 0.4. Documents with similarity score less than this will be ignored.
+- `RELEVANCE_SCORE_THRESHOLD_DB:` Minimum relevance score with respect to top document for a document to be selected from database. Default is 0.6. Only those documents will be selected whose relevance score with respect to top document is greater than this threshold.
+- `ACCEPTABLE_RELEVANCE_SCORE_RETRIEVER:` Minimum similarity score with user query for a document to be considered from Wikipedia retriver. Default is 0.4.
+- `RELEVANCE_SCORE_THRESHOLD_RETRIEVER:` Minimum relevance score with respect to top document for a document to be selected from Wikipedia retriver. Default is 0.75.
+- `AUTO_COMPRESS:` Enable or disable auto compression of webpages in database. Default is True.
+- `MAX_ALLOWED_SOURCES_IN_DB:` Maximum number of webpages to store in database at a given time. Default is 10. Works only if `AUTO_COMPRESS` is True.
 
 ## References
+Thanks to Hugging Face and respective authors for providing the models.
+1. <a href="https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2">Embedding Model</a>
+2. <a href="https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct">LLM Model</a>
 
+Thanks to Material-Ui for providing components.
+<a href="https://mui.com/material-ui/">Material-UI Library</a>
 
-     
+## Thanks !!
