@@ -2,6 +2,7 @@ from rag.webloader import WebPageContentLoader
 from rag.chroma import ChromaDatabase
 from rag.model import GenerateModel
 from config import logger
+from settings import EnvironmentProvider
 from reqModel.main import UserQueryRequest
 
 class Service:
@@ -9,6 +10,7 @@ class Service:
         self.wb_loader = WebPageContentLoader()
         self.db = ChromaDatabase()
         self.gen_model = GenerateModel()
+        self.envConfig = EnvironmentProvider()
 
     def load_web_page_data(self, url: str):
         doc_exist = self.db.check_web_page(url)
@@ -26,7 +28,11 @@ class Service:
                     "message": "Failed to load web page data."
                 }
             else:
-                res = self.db.add_docs(docs)
+                res = self.db.add_docs(
+                    scripts=docs,
+                    auto_compress=self.envConfig.AUTO_COMPRESS,
+                    max_allow_length=self.envConfig.MAX_ALLOWED_SOURCES_IN_DB
+                )
                 if res is not None:
                     return {
                         "status": True,
@@ -62,9 +68,9 @@ class Service:
             query_docs = self.db.retrieve_docs(
                 queryObj.query, 
                 queryObj.url, 
-                k=5,
-                acceptable_relevance_score=0.4,
-                relevance_score_threshold=0.6
+                k=self.envConfig.TOP_K_DOCS_IN_DB,
+                acceptable_relevance_score=self.envConfig.ACCEPTABLE_RELEVANCE_SCORE_DB,
+                relevance_score_threshold=self.envConfig.RELEVANCE_SCORE_THRESHOLD_DB
             )
             InPageSearchFail = (len(query_docs) == 0)
             logger.info(f"External Search Enabled: {queryObj.externalSearch}")
@@ -74,9 +80,9 @@ class Service:
                 wiki_keywords = self.gen_model.get_wiki_keywords(queryObj.query)     
                 wiki_docs = self.wb_loader.load_wikipedia_data(
                     wiki_keywords,
-                    top_k=2,
-                    acceptable_relevance_score=0.4,
-                    relevance_score_threshold=0.75
+                    top_k=self.envConfig.TOP_K_DOCS_IN_RETRIEVER,
+                    acceptable_relevance_score=self.envConfig.ACCEPTABLE_RELEVANCE_SCORE_RETRIEVER,
+                    relevance_score_threshold=self.envConfig.RELEVANCE_SCORE_THRESHOLD_RETRIEVER
                 )
                 
             context_docs = []

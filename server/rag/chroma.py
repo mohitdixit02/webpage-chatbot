@@ -60,7 +60,7 @@ class ChromaDatabase:
             logger.info("No compression needed. Docs less than Max Allowed Length.")
                     
         
-    def add_docs(self, scripts : object, auto_compress : bool=True, max_allow_length : int=5):   
+    def add_docs(self, scripts : object, auto_compress : bool=True, max_allow_length : int=10):   
         if auto_compress:
             logger.info("Auto Compress Enabled. Checking for compression...")
             self.compress_data(max_allow_length)
