@@ -36,7 +36,7 @@ Make sure you have following installed in your system:
 2. Backend Setup:
     - Enter into the backend directory:
         ```bash
-        cd backend
+        cd server
         ```
     - If you have conda installed, create a conda environment:
         ```bash
