@@ -3,7 +3,7 @@ A Chrome extension chatbot that answers user queries based on the content of the
 
 ### Key Features
 - `Contextual Responses:` Provides answers based on the content of the webpage you are viewing.
-- `External Search:` Feature to use Wikipedia to fetch additional information when the webpage content is insufficient.
+- `External Search:` When enabled by the user, Backend uses Wikipedia to fetch additional information based on the user query before responding.
 - `Automatic Fallback:` If webpage content is insufficient, the chatbot automatically performs external searches even if it is not enabled.
 - `Model Behavior:` Can Explain, Summarize or give one-line answers based on user selection.
 - `In-built Context based Filtering:` Filters out irrelevant information to provide accurate responses. It involves optimizations at database as well as retriver level.
@@ -74,7 +74,7 @@ Make sure you have following installed in your system:
 
 
 ## Project Architecture
-
+![Chatbot Architecture](images/chatbot_architecture.png)
 
 ## Challenges and Optimizations
 
