@@ -1,4 +1,4 @@
-from langchain_huggingface import HuggingFacePipeline, HuggingFaceEmbeddings, HuggingFaceEndpoint, ChatHuggingFace
+from langchain_huggingface import HuggingFacePipeline, HuggingFaceEmbeddings, HuggingFaceEndpoint, ChatHuggingFace, HuggingFaceEndpointEmbeddings
 from langchain_core.output_parsers import StrOutputParser, PydanticOutputParser
 from rag.template import TemplateProvider
 from pydantic import BaseModel, Field
@@ -7,6 +7,7 @@ import numpy as np
 from numpy import dot
 from numpy.linalg import norm
 from config import logger
+from settings import EnvironmentProvider
 
 class QueryTypeStructModel(BaseModel):
     type: Annotated[Literal["casual", "query"], Field(description="Type of the user query")]
@@ -23,9 +24,19 @@ class WikiKeywordResponseModel(BaseModel):
 class EmbedModel:
     def __init__(self):
         logger.info("Initializing embedding model...")
-        self.model = HuggingFaceEmbeddings(
-            model_name="sentence-transformers/all-MiniLM-L6-v2"
-        )
+        envProvider = EnvironmentProvider()
+        if envProvider.LOCAL_EMBEDDING_MODEL:
+            logger.info("Using local embedding model: sentence-transformers/all-MiniLM-L6-v2")
+            self.model = HuggingFaceEmbeddings(
+                model_name="sentence-transformers/all-MiniLM-L6-v2"
+            )
+        else:
+            logger.info("Using Hugging Face Endpoint for embedding model.")
+            self.model = HuggingFaceEndpointEmbeddings(
+                model="sentence-transformers/all-MiniLM-L6-v2",
+                task="feature-extraction",
+                huggingfacehub_api_token=envProvider.HF_TOKEN,
+            )
         
     def get_model(self):
         return self.model

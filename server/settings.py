@@ -14,3 +14,6 @@ class EnvironmentProvider:
         
         self.AUTO_COMPRESS = bool(int(os.getenv("AUTO_COMPRESS", "True") == "True"))
         self.MAX_ALLOWED_SOURCES_IN_DB = int(os.getenv("MAX_ALLOWED_SOURCES_IN_DB", 10))
+        
+        self.LOCAL_EMBEDDING_MODEL = bool(int(os.getenv("LOCAL_EMBEDDING_MODEL", "False") == "True"))
+        self.HF_TOKEN = os.getenv("HF_TOKEN", "")

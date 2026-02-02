@@ -52,7 +52,8 @@ Make sure you have following installed in your system:
     - Create a env file by referencing the `env.example` and add your Hugging Face API key in `HF_TOKEN`. 
         - For `FRONTEND_URL`, you can use the default one in `env.example`. It is only required if `REACT_APP_NODE_ENV` set to `development` in frontend env file. For `production`, you can leave it blank.
         - For `BACKEND_EXTENSION_AUTH_ID`, you can generate a random value on your own. Make sure its the same in both frontend and backend env files.
-        - For `HF_CACHE_DIR`, provide a valid path in your system where you want to store the Hugging Face models cache. Currently, Embedding Model run locally based on the `transformers` module.
+        - For `LOCAL_EMBEDDING_MODEL`, set it to `True` if you want to run the Embedding Model locally using `transformers` module. Else, set it to `False`. If set to `False`, make sure to provide your Hugging Face API key in `HF_TOKEN`.
+        - For `HF_CACHE_DIR`, provide a valid path in your system where you want to store the Hugging Face models cache. It is only required if `LOCAL_EMBEDDING_MODEL` is set to `True`.
         - For `Settings` related env variables, you can use the default values provided in `env.example` or modify them as per your requirements. For more details related to terms, you can check the <a href="#settings-and-configurations">Settings and Configurations</a> section.
 
     - Make sure you are in the activated environment, then run the backend server:
@@ -118,7 +119,7 @@ Provides prompt templates based on different requirements like:
 
 ### Models:
 - `Embedding Model:` 
-    - Uses Hugging Face's `sentence-transformers/all-MiniLM-L6-v2` model for generating embeddings. It currently runs locally using `transformers` module.
+    - Uses Hugging Face's `sentence-transformers/all-MiniLM-L6-v2` model for generating embeddings. It can be used either via Hugging Face API or run locally using `transformers` module based on the environment variable setting.
     - It is used
         - By `Chroma DB` for storing embedding vectors
         - By `context based filtering` to find the relevance between documents and user query.
