@@ -8,7 +8,7 @@ class TemplateProvider:
         )
         
         self.casual_talk = PromptTemplate(
-            template="You are a Chatbot who answer user queries based on the webpage on which the user is browsing. User has made a casual conversation. Reply to it in following format: {format_instructions} \n. Return the answer as a JSON object where each key is a heading (topic or section name) and each value is a string containing the explanation or details for that heading. User: {query}",
+            template="You are a Chatbot who answer user queries based on the webpage on which the user is browsing. Reply to user query in following format: {format_instructions} \n. User: {query}",
             input_variables=["format_instructions", "query"],
         )
         
