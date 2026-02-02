@@ -23,7 +23,7 @@ A Chrome extension chatbot that answers user queries based on the content of the
 ### Prerequisites
 Make sure you have following installed in your system:
 1. Node.js (21.7)
-2. Conda (25.9) (Recommended) or Python 3.11+
+2. Conda (25.9) (Recommended) or Python 3.11
 3. Hugging Face API Key (You can create one by signing up at Hugging face website)
 
 ### Setup
@@ -43,7 +43,7 @@ Make sure you have following installed in your system:
         conda env create -f environment.yml
         conda activate webpage-chatbot
         ```
-    - If you don't have conda, create a virtual environment using venv. For windows:
+    - If you don't have conda, create a virtual environment using venv. Make sure you have `python 3.11`. For windows:
         ```bash
         python -m venv venv
         .\venv\Scripts\activate
@@ -81,6 +81,15 @@ Make sure you have following installed in your system:
         - Click on "Load unpacked" and select the `build` folder inside the `webchatbot` directory.
 
     Note: Use `development` in `REACT_APP_NODE_ENV` only if you want to run it for testing. Make sure to change it to `production` before building the extension for actual use.
+
+4. GPU Setup (Optional):
+   - If you have a compatible GPU and want to run the Embedding Model on GPU, make sure you have installed the appropriate CUDA and cuDNN versions.
+        - `CUDA: 12.1+` (Project version- 13.0)
+        - `cuDNN: 8.9+` (Project version- 9.1.0)
+   - Activate the respective environment (Conda or venv) and run below command to install the GPU version of PyTorch:
+    ```bash
+    pip install torch==2.5.1+cu121 torchvision==0.20.1+cu121 --index-url https://download.pytorch.org/whl/cu121
+    ```
 
 
 ## Project Architecture
