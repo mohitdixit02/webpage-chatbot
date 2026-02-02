@@ -29,7 +29,7 @@ async def verify_extension_id(request, call_next):
     expected_id = os.getenv("BACKEND_EXTENSION_AUTH_ID")
     received_id = request.headers.get("X-EXTENSION-AUTH-ID")
     if received_id != expected_id:
-        logger.error("Invalid AUTH ID received:", received_id)
+        logger.error(f"Invalid AUTH ID received: {received_id}")
         return APIResponse(
             res_instance=ErrorResponse(res_message="Invalid AUTH ID."), 
             status_code=401

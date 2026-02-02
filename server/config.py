@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Cache Directories Setup
-isLocalEmbeddingModel = os.getenv("LOCAL_EMBEDDING_MODEL", "True") == "True"
+isLocalEmbeddingModel = os.getenv("LOCAL_EMBEDDING_MODEL", "False") == "True"
 if isLocalEmbeddingModel:
     logger.info("Local embedding model is enabled.")
     logger.info("Setting up cache directories...")

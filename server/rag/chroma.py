@@ -131,5 +131,5 @@ class ChromaDatabase:
             
             return filtered_results
         except Exception as e:
-            logger.error("Error retrieving documents:", e)
+            logger.error(f"Error retrieving documents: {e}")
             return []
