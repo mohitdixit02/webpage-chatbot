@@ -87,9 +87,9 @@ Make sure you have following installed in your system:
         - `CUDA: 12.1+` (Project version- 13.0)
         - `cuDNN: 8.9+` (Project version- 9.1.0)
    - Activate the respective environment (Conda or venv) and run below command to install the GPU version of PyTorch:
-    ```bash
-    pip install torch==2.5.1+cu121 torchvision==0.20.1+cu121 --index-url https://download.pytorch.org/whl/cu121
-    ```
+        ```bash
+        pip install torch==2.5.1+cu121 torchvision==0.20.1+cu121 --index-url https://download.pytorch.org/whl/cu121
+        ```
 
 
 ## Project Architecture
